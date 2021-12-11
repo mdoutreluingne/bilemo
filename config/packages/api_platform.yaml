@@ -5,3 +5,18 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
+    formats:
+        json:
+            mime_types: ['application/json']
+        html:
+            mime_types: ['text/html']
+    # The title of the API.
+    title: 'API BileMo'
+    # The description of the API.
+    description: "Liste des produits BileMo ainsi que de la gestion utilisteurs client"
+    # The version of the API.
+    version: '1.0.0'
