@@ -26,20 +26,26 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $admin->setEmail('admin@bilemo.fr');
         $admin->setPassword($this->encoder->hashPassword($admin, 'adminadmin'));
         $admin->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+        $admin->setFirstname("admin");
+        $admin->setLastname("admin");
         $admin->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_BILEMO));
         $manager->persist($admin);
 
         $userOne = new User();
-        $userOne->setEmail('stephane@flexcon.fr');
+        $userOne->setEmail('maxime@sfr.fr');
         $userOne->setPassword($this->encoder->hashPassword($userOne, 'testtest'));
         $userOne->setRoles(['ROLE_USER']);
+        $userOne->setFirstname("Maxime");
+        $userOne->setLastname("Doutreluingne");
         $userOne->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_SFR));
         $manager->persist($userOne);
 
         $userTwo = new User();
-        $userTwo->setEmail('jeff@best-platform.fr');
+        $userTwo->setEmail('john@orange.fr');
         $userTwo->setPassword($this->encoder->hashPassword($userTwo, 'testtest'));
         $userTwo->setRoles(['ROLE_USER']);
+        $userTwo->setFirstname("John");
+        $userTwo->setLastname("LeRouge");
         $userTwo->setCustomer($this->getReference(CustomerFixtures::CUSTOMER_ORANGE));
         $manager->persist($userTwo);
 
