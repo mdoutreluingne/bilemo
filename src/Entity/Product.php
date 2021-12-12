@@ -35,7 +35,7 @@ class Product
     private $year;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=100)
      */
     private $color;
 
@@ -48,6 +48,11 @@ class Product
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $storage;
 
     public function getId(): ?int
     {
@@ -122,6 +127,18 @@ class Product
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getStorage(): ?int
+    {
+        return $this->storage;
+    }
+
+    public function setStorage(int $storage): self
+    {
+        $this->storage = $storage;
 
         return $this;
     }
