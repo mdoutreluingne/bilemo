@@ -6,9 +6,20 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * @ApiResource(
+ *  collectionOperations={"get"},
+ *      itemOperations={
+ *          "get",
+ *          "patch",
+ *          "delete"
+ *      },
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="Cette adresse e-mail est déjà associée à un compte existant.")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
