@@ -11,12 +11,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
- *  collectionOperations={"get"},
- *      itemOperations={
- *          "get",
- *          "patch",
- *          "delete"
- *      },
+ *  collectionOperations={
+ *      "get", 
+ *      "post"
+ *  },
+ *  itemOperations={
+ *      "get",
+ *      "put",
+ *      "delete"
+ *  },
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="Cette adresse e-mail est déjà associée à un compte existant.")
