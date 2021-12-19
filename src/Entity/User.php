@@ -20,9 +20,19 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *      "post"
  *  },
  *  itemOperations={
- *      "get",
- *      "put",
- *      "delete"
+ *      "get"={
+ *          "security"="is_granted('USER_READ', object)",
+ *      },
+ *      "put"={
+ *          "security"="is_granted('USER_EDIT', object)",
+ *      },
+ *      "delete"={
+ *          "security"="is_granted('USER_DELETE', object)",
+ *      },
+ *  },
+ *  attributes={
+ *      "pagination_items_per_page" = 5,
+ *      "pagination_maximum_items_per_page" = 10,
  *  },
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)

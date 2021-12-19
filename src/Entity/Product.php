@@ -10,6 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *  collectionOperations={"get"},
  *  itemOperations={"get"},
+ *  attributes={
+ *      "pagination_items_per_page" = 10,
+ *      "pagination_maximum_items_per_page" = 20,
+ *  },
  * )
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
