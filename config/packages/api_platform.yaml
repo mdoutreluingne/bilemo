@@ -17,6 +17,14 @@ api_platform:
     # The title of the API.
     title: 'API BileMo'
     # The description of the API.
-    description: "Liste des produits BileMo ainsi que de la gestion utilisteurs client"
+    description: "List of BileMo products as well as customer user management"
     # The version of the API.
     version: '1.0.0'
+    defaults:
+        cache_headers:
+            max_age: 3600
+            shared_max_age: 3600
+            vary: [ 'Content-Type', 'Authorization', 'Origin', 'Accept' ]
+            etag: true
+    http_cache:
+        public: false

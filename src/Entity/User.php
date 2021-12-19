@@ -8,15 +8,22 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource(
- *  collectionOperations={"get"},
- *      itemOperations={
- *          "get",
- *          "patch",
- *          "delete"
- *      },
+ *  normalizationContext={"groups"={"user:read"}},
+ *  denormalizationContext={"groups"={"user:write"}},
+ *  collectionOperations={
+ *      "get", 
+ *      "post"
+ *  },
+ *  itemOperations={
+ *      "get",
+ *      "put",
+ *      "delete"
+ *  },
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="Cette adresse e-mail est déjà associée à un compte existant.")
@@ -27,16 +34,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups("user:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * 
+     * @Groups("user:read")
      */
     private $roles = [];
 
@@ -47,18 +60,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
+     * @Groups("user:write")
+     * 
+     * @SerializedName("password")
+     */
+    private $plainPassword;
+
+    /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $lastname;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups("user:read")
      */
     private $customer;
 
@@ -148,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getFirstname(): ?string
@@ -183,6 +209,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of plainPassword
+     */ 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set the value of plainPassword
+     *
+     * @return  self
+     */ 
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
