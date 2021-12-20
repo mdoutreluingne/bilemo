@@ -18,22 +18,13 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
 {
     private $security;
     private $entityManager;
-    private $pagination;
-    private $filter;
-    private $userRepository;
 
     public function __construct(
         Security $security,
-        EntityManagerInterface $entityManager,
-        PaginationExtension $pagination,
-        FilterExtension $filter,
-        UserRepository $userRepository
+        EntityManagerInterface $entityManager
     ) {
         $this->security = $security;
         $this->entityManager = $entityManager;
-        $this->pagination = $pagination;
-        $this->filter = $filter;
-        $this->userRepository = $userRepository;
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool

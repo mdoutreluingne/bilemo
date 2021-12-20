@@ -33,4 +33,13 @@ api_platform:
         vary: ['Content-Type', 'Authorization', 'Origin', 'Accept']
         etag: true
         public: true
+    error_formats:
+        jsonproblem: ['application/problem+json']
+    exception_to_status:
+        # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+        # Validation exception
+        ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
 
