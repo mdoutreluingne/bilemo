@@ -62,7 +62,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 ],
                 'detail' => [
                     'type' => 'string',
-                    'example' => 'Invalid request body. You must provide \'username\' and \'password\' keys',
+                    'example' => 'Invalid request body. You must provide \'email\' and \'password\' keys',
                 ],
             ],
         ]);
