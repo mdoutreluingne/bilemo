@@ -10,19 +10,52 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *  normalizationContext={"groups"={"user:read"}},
  *  denormalizationContext={"groups"={"user:write"}},
  *  collectionOperations={
- *      "get", 
- *      "post"
+ *      "get"= {
+ *          "openapi_context"={
+ *              "summary"="Retrieves the collection of users from your company",
+ *              "description"="Retrieves the collection of users from your company.",
+ *           },
+ *      }, 
+ *      "post"={
+ *          "openapi_context"={
+ *              "summary"="Creates a new user resource for your company",
+ *              "description"="Creates a user resource for your company.",
+ *           },
+ *      }
  *  },
  *  itemOperations={
- *      "get",
- *      "put",
- *      "delete"
+ *      "get"={
+ *          "security"="is_granted('USER_READ', object)",
+ *          "openapi_context"={
+ *              "summary"="Retrieves the the detail of a user resource from your company",
+ *              "description"="Retrieves the the detail of a user resource from your company",
+ *           },
+ *      },
+ *      "put"={
+ *          "security"="is_granted('USER_EDIT', object)",
+ *          "openapi_context"={
+ *              "summary"="Replaces the user resource from your company",
+ *              "description"="Replaces the user resource from your company",
+ *           },
+ *      },
+ *      "delete"={
+ *          "security"="is_granted('USER_DELETE', object)",
+ *          "openapi_context"={
+ *              "summary"="Removes the user resource from your company",
+ *              "description"="Removes the user resource from your company",
+ *           },
+ *      },
+ *  },
+ *  attributes={
+ *      "pagination_items_per_page" = 5,
+ *      "pagination_maximum_items_per_page" = 10,
  *  },
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -41,6 +74,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(
+     *     message="L'adresse e-mail ne peut pas être vide."
+     * )
+     * @Assert\Email(
+     *     message="L'adresse e-mail entrée n'est pas sous un format correct."
+     * )
      * 
      * @Groups({"user:read", "user:write"})
      */
@@ -61,6 +100,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @Groups("user:write")
+     * @Assert\NotBlank(
+     *     message="Le mot de passe ne peut être vide."
+     * )
+     * @Assert\Length(
+     *     min=6,
+     *     minMessage="Le mot de passe doit comprendre au minimum 6 caractères."
+     * )
      * 
      * @SerializedName("password")
      */
@@ -68,6 +114,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\Length(
+     *     min=2,
+     *     max="50",
+     *     minMessage="Le prénom doit contenir au minimum 2 caractères.",
+     *     maxMessage="Le prénom doit contenir au maximum 50 caractères."
+     * )
      * 
      * @Groups({"user:read", "user:write"})
      */
@@ -75,6 +127,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\Length(
+     *     min=2,
+     *     max="50",
+     *     minMessage="Le nom de famille doit contenir au minimum 2 caractères.",
+     *     maxMessage="Le nom de famille doit contenir au maximum 50 caractères."
+     * )
      * 
      * @Groups({"user:read", "user:write"})
      */
@@ -83,6 +141,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid()
      * 
      * @Groups("user:read")
      */
