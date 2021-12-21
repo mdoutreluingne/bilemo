@@ -22,7 +22,33 @@ final class JwtDecorator implements OpenApiFactoryInterface
     {
         $openApi = ($this->decorated)($context);
         $schemas = $openApi->getComponents()->getSchemas();
+     
+        $this->configurationSchemaToken($schemas);
+        $this->configurationSchemaCredentials($schemas);
+        $this->configurationSchemaBadRequest($schemas);
 
+        /* Create path item */
+        $pathItem = new Model\PathItem(
+            'JWT Token',
+            null,
+            null,
+            null,
+            null,
+            $this->configurationPostOperation()
+        );
+        $openApi->getPaths()->addPath('/login', $pathItem);
+
+        return $openApi;
+    }
+
+    /**
+     * configurationSchemaToken
+     *
+     * @param mixed $schemas
+     * @return void
+     */
+    private function configurationSchemaToken($schemas): void
+    {
         $schemas['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -32,19 +58,16 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 ],
             ],
         ]);
-        $schemas['Credentials'] = new \ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'email' => [
-                    'type' => 'string',
-                    'example' => 'johndoe@example.com',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'apassword',
-                ],
-            ],
-        ]);
+    }
+
+    /**
+     * configurationSchemaBadRequest
+     *
+     * @param mixed $schemas
+     * @return void
+     */
+    private function configurationSchemaBadRequest($schemas): void
+    {
         $schemas['BadRequest'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -66,14 +89,39 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 ],
             ],
         ]);
+    }
 
-        $pathItem = new Model\PathItem(
-            'JWT Token',
-            null,
-            null,
-            null,
-            null,
-            new Model\Operation(
+    /**
+     * configurationSchemaCredentials
+     *
+     * @param mixed $schemas
+     * @return void
+     */
+    private function configurationSchemaCredentials($schemas): void
+    {
+        $schemas['Credentials'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'email' => [
+                    'type' => 'string',
+                    'example' => 'johndoe@example.com',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'apassword',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * configurationPostOperation
+     *
+     * @return Model\Operation
+     */
+    private function configurationPostOperation(): Model\Operation
+    {
+        return new Model\Operation(
                 'postCredentialsItem',
                 ['Authentication'],
                 [
@@ -112,10 +160,6 @@ final class JwtDecorator implements OpenApiFactoryInterface
                         ],
                     ]),
                 ),
-            ),
-        );
-        $openApi->getPaths()->addPath('/login', $pathItem);
-
-        return $openApi;
+            );
     }
 }
