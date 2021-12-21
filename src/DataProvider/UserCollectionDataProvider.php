@@ -18,13 +18,19 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
 {
     private $security;
     private $entityManager;
+    private $pagination;
+    private $filter;
 
     public function __construct(
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        PaginationExtension $pagination,
+        FilterExtension $filter
     ) {
         $this->security = $security;
         $this->entityManager = $entityManager;
+        $this->pagination = $pagination;
+        $this->filter = $filter;
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -34,11 +40,17 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
     {
-        # Set custom queryBuilder
+        # Create queryBuilder
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder = $this->requestAccess($this->security->getUser(), $queryBuilder);
 
-        return $queryBuilder->getQuery()->getResult();
+        $generator = new QueryNameGenerator();
+
+        # Apply filters & pagination
+        $this->filter->applyToCollection($queryBuilder, $generator, $resourceClass, $operationName, $context);
+        $this->pagination->applyToCollection($queryBuilder, $generator, $resourceClass, $operationName, $context);
+
+        return $this->pagination->getResult($queryBuilder, $resourceClass, $operationName, $context);
     }
 
     /**

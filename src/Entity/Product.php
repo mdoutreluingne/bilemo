@@ -6,6 +6,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
  * @ApiResource(
@@ -17,6 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  },
  * )
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"name": "partial"})
+ * @ApiFilter(RangeFilter::class, properties={"price", "year"})
  */
 class Product
 {
