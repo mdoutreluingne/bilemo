@@ -11,6 +11,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 /**
  * @ApiResource(
@@ -58,6 +60,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      "pagination_maximum_items_per_page" = 10,
  *  },
  * )
+ * @ApiFilter(SearchFilter::class, properties={"email": "partial"})
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="Cette adresse e-mail est déjà associée à un compte existant.")
  */
